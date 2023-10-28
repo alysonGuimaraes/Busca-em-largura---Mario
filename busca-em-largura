@@ -1,0 +1,132 @@
+import heapq
+
+class Grafo:
+    def _init_(self):
+        self.vertices = set()
+        self.arestas = {}
+
+    def adicionar_vertice(self, vertice):
+        self.vertices.add(vertice)
+        if vertice not in self.arestas:
+            self.arestas[vertice] = []
+
+    def adicionar_aresta(self, origem, destino, peso):
+        self.arestas[origem].append((destino, peso))
+        self.arestas[destino].append((origem, peso))  
+
+def dijkstra(grafo, inicio, fim):
+    if inicio not in grafo.vertices or fim not in grafo.vertices:
+        return None
+
+    distancias = {vertice: float('inf') for vertice in grafo.vertices}
+    distancias[inicio] = 0
+    fila = [(0, inicio)]
+
+    while fila:
+        dist_vertice, vertice = heapq.heappop(fila)
+
+        if dist_vertice > distancias[vertice]:
+            continue
+
+        for vizinho, peso in grafo.arestas[vertice]:
+            distancia_alternativa = distancias[vertice] + peso
+            if distancia_alternativa < distancias[vizinho]:
+                distancias[vizinho] = distancia_alternativa
+                heapq.heappush(fila, (distancia_alternativa, vizinho))
+
+    caminho = []
+    vertice_atual = fim
+    while vertice_atual != inicio:
+        caminho.insert(0, vertice_atual)
+        for vizinho, peso in grafo.arestas[vertice_atual]:
+            if distancias[vizinho] + peso == distancias[vertice_atual]:
+                vertice_atual = vizinho
+                break
+    caminho.insert(0, inicio)
+
+    return caminho
+
+
+grafo = Grafo()
+for i in range(1, 57):
+    grafo.adicionar_vertice(str(i))
+grafo.adicionar_aresta("1", "2", 1)
+grafo.adicionar_aresta("1", "3", 1)
+grafo.adicionar_aresta("3", "4", 1)
+grafo.adicionar_aresta("4", "5", 1)
+grafo.adicionar_aresta("5", "6", 1)
+grafo.adicionar_aresta("6", "7", 1)
+grafo.adicionar_aresta("7", "8", 1)
+grafo.adicionar_aresta("5", "9", 1)
+grafo.adicionar_aresta("9", "10", 1)
+grafo.adicionar_aresta("10", "11", 1)
+grafo.adicionar_aresta("10", "12", 1)
+grafo.adicionar_aresta("12", "13", 1)
+grafo.adicionar_aresta("9", "14", 1)
+grafo.adicionar_aresta("14", "15", 1)
+grafo.adicionar_aresta("15", "16", 1)
+grafo.adicionar_aresta("15", "53", 1)
+grafo.adicionar_aresta("16", "17", 1)
+grafo.adicionar_aresta("16", "18", 1)
+grafo.adicionar_aresta("18", "19", 1)
+grafo.adicionar_aresta("18", "21", 1)
+grafo.adicionar_aresta("18", "20", 1)
+grafo.adicionar_aresta("20", "18", 1)
+grafo.adicionar_aresta("20", "21", 1)
+grafo.adicionar_aresta("21", "20", 1)
+grafo.adicionar_aresta("21", "22", 1)
+grafo.adicionar_aresta("22", "23", 1)
+grafo.adicionar_aresta("22", "24", 1)
+grafo.adicionar_aresta("24", "56", 1)
+grafo.adicionar_aresta("24", "25", 1)
+grafo.adicionar_aresta("25", "26", 1)
+grafo.adicionar_aresta("25", "28", 1)
+grafo.adicionar_aresta("26", "28", 1)
+grafo.adicionar_aresta("26", "27", 1)
+grafo.adicionar_aresta("28", "26", 1)
+grafo.adicionar_aresta("28", "25", 1)
+grafo.adicionar_aresta("28", "29", 1)
+grafo.adicionar_aresta ("29", "30", 1)
+grafo.adicionar_aresta ("29", "32", 1)
+grafo.adicionar_aresta ("30", "31", 1)
+grafo.adicionar_aresta ("32", "33", 1)
+grafo.adicionar_aresta ("33", "42", 1)
+grafo.adicionar_aresta ("33", "34", 1)
+grafo.adicionar_aresta ("42", "33", 1)
+grafo.adicionar_aresta ("41", "37", 1)
+grafo.adicionar_aresta ("41", "38", 1)
+grafo.adicionar_aresta ("38", "39", 1)
+grafo.adicionar_aresta ("38", "37", 1)
+grafo.adicionar_aresta ("39", "40", 1)
+grafo.adicionar_aresta ("37", "35", 1)
+grafo.adicionar_aresta ("37", "34", 1)
+grafo.adicionar_aresta ("35", "34", 1)
+grafo.adicionar_aresta ("35", "36", 1)
+grafo.adicionar_aresta("47", "41", 1)
+grafo.adicionar_aresta("47", "49", 1)
+grafo.adicionar_aresta("47", "48", 1)
+grafo.adicionar_aresta("49", "50", 1)
+grafo.adicionar_aresta("50", "51", 1)
+grafo.adicionar_aresta("50", "52", 1)
+grafo.adicionar_aresta("52", "53", 1)
+grafo.adicionar_aresta("53", "15", 1)
+grafo.adicionar_aresta("53", "54", 1)
+grafo.adicionar_aresta("54", "56", 1)
+grafo.adicionar_aresta("56", "24", 1)
+grafo.adicionar_aresta("54", "51", 1)
+grafo.adicionar_aresta("51", "46", 1)
+grafo.adicionar_aresta("46", "43", 1)
+grafo.adicionar_aresta("43", "42", 1)
+grafo.adicionar_aresta("44", "42", 1)
+grafo.adicionar_aresta("44", "45", 1)
+grafo.adicionar_aresta("54", "55", 1)
+grafo.adicionar_aresta("55", "46", 1)
+
+inicio = "1"
+fim = str(input("Coloque a fase que você deseja chegar entre as fases 2 e 56: "))
+caminho_minimo = dijkstra(grafo, inicio, fim)
+
+if caminho_minimo:
+    print(f"Menor caminho entre {inicio} e {fim}: {caminho_minimo}")
+else:
+    print(f"Não foi possível encontrar um caminho entre {inicio} e {fim}.")
